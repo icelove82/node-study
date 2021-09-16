@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 
 // express app
 const app = express();
@@ -8,6 +9,21 @@ app.set('view engine', 'ejs');
 
 // listen for request
 app.listen(3000);
+
+// static file access by middleware
+app.use(express.static('public'));
+
+// log by middleware
+// app.use((req, res, next) => {
+//   console.log('--- New Request ---');
+//   console.log('host: ', req.hostname);
+//   console.log('path: ', req.path);
+//   console.log('method: ', req.method);
+//   next();
+// });
+
+// log by 3-party middleware
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
   const blogs = [
@@ -44,7 +60,7 @@ app.get('/about-us', (req, res) => {
   res.redirect('/about', { title: 'About' });
 });
 
-// 404 page
+// 404 page by middleware
 app.use((req, res) => {
   //   res.status(404).sendFile('./views/404.html', { root: __dirname });
   res.status(404).render('404', { title: '404' });
