@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const Blog = require('./models/blog');
+const { result } = require('lodash');
 
 // express app
 const app = express();
@@ -35,6 +37,33 @@ app.use(express.static('public'));
 // log by 3-party middleware
 app.use(morgan('dev'));
 
+// API
+app.get('/add-blog', (req, res) => {
+  const blog = new Blog({
+    title: 'new blog',
+    snippet: 'about my new blog',
+    body: 'more about my new blog',
+  });
+
+  blog
+    .save()
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
+});
+
+app.get('/all-blogs', (req, res) => {
+  Blog.find()
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
+});
+
+app.get('/single-blog', (req, res) => {
+  Blog.findById('61459aa39fd41a5fa1fb1844')
+    .then((result) => res.send(result))
+    .catch((err) => console.log(err));
+});
+
+// Routes
 app.get('/', (req, res) => {
   const blogs = [
     {
