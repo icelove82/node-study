@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Blog = require('./models/blog');
 const _ = require('lodash');
+const { render } = require('ejs');
 
 // express app
 const app = express();
@@ -22,8 +23,10 @@ app.set('view engine', 'ejs');
 // listen for request
 app.listen(3000);
 
-// static file access by middleware
-app.use(express.static('public'));
+// use middleware
+app.use(express.static('public')); // static file access
+app.use(express.urlencoded({ extended: true })); // post req parameter
+app.use(morgan('dev')); // log by 3-party middleware
 
 // log by middleware
 // app.use((req, res, next) => {
@@ -33,9 +36,6 @@ app.use(express.static('public'));
 //   console.log('method: ', req.method);
 //   next();
 // });
-
-// log by 3-party middleware
-app.use(morgan('dev'));
 
 // Routes
 app.get('/', (req, res) => {
@@ -54,11 +54,34 @@ app.get('/blogs', (req, res) => {
     .then((result) => {
       res.render('index', { title: 'All Blogs', blogs: result });
     })
-    .then((err) => {
+    .catch((err) => {
       console.log(err);
     });
 });
 
+app.post('/blogs', (req, res) => {
+  const blog = new Blog(req.body);
+
+  blog
+    .save()
+    .then((result) => {
+      res.redirect('/blogs');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.get('/blogs/:id', (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id)
+    .then((result) => {
+      res.render('details', { blog: result, title: 'Blog Details' });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 app.get('/blogs/create', (req, res) => {
   res.render('create', { title: 'Create a new Blog' });
 });
