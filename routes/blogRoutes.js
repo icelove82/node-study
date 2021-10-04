@@ -6,44 +6,13 @@ const router = express.Router();
 // Route
 router.get('/', blogController.blog_index);
 
-router.get('/create', (req, res) => {
-  res.render('create', { title: 'Create a new Blog' });
-});
+router.get('/create', blogController.blog_create_get);
 
 // API
-router.post('/', (req, res) => {
-  const blog = new Blog(req.body);
+router.post('/', blogController.blog_create_post);
 
-  blog
-    .save()
-    .then((result) => {
-      res.redirect('/');
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+router.get('/:id', blogController.blog_details);
 
-router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  Blog.findById(id)
-    .then((result) => {
-      res.render('details', { blog: result, title: 'Blog Details' });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  Blog.findByIdAndDelete(id)
-    .then((result) => {
-      res.json({ redirect: '/blogs' });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+router.delete('/:id', blogController.blog_delete);
 
 module.exports = router;
