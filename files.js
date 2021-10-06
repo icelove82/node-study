@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-// reading files
+// reading files - 异步读取
 fs.readFile('./docs/blog1.txt', (err, data) => {
   if (err) {
     console.log(err);
@@ -8,12 +8,12 @@ fs.readFile('./docs/blog1.txt', (err, data) => {
   console.log(data.toString());
 });
 
-// writing files
+// writing files - 异步写入
 fs.writeFile('./docs/blog2.txt', 'hello, again', () => {
   console.log('file was written');
 });
 
-// directories
+// directories - 同步 阻塞式处理
 if (!fs.existsSync('./assets')) {
   fs.mkdir('./assets', (err) => {
     if (err) {
@@ -30,7 +30,7 @@ if (!fs.existsSync('./assets')) {
   });
 }
 
-// deleting files
+// deleting files - 同步 阻塞式处理
 if (fs.existsSync('./docs/deleteme.txt')) {
   fs.unlink('./docs/deleteme.txt', (err) => {
     if (err) {

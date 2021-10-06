@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+// 流文件 实时读写 速度快
 const readStream = fs.createReadStream('./docs/blog3.txt', {
   encoding: 'utf-8',
 });
