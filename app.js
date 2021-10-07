@@ -13,14 +13,17 @@ const dbUri =
 
 mongoose
   .connect(dbUri)
-  .then((res) => console.log('Connected to db'))
-  .catch((err) => console.log(err));
+  .then((res) => {
+    // listen for request
+    app.listen(3000);
+    console.log('Connected to db');
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 // register view engine
 app.set('view engine', 'ejs');
-
-// listen for request
-app.listen(3000);
 
 // use middleware
 app.use(express.static('public')); // static file access
@@ -47,13 +50,8 @@ app.get('/about', (req, res) => {
   res.render('about', { title: 'About' });
 });
 
-// blog routes
+// Routes hub
 app.use('/blogs', blogRoutes);
-
-// redirects
-app.get('/about-us', (req, res) => {
-  res.redirect('/about', { title: 'About' });
-});
 
 // 404 page by middleware
 app.use((req, res) => {
