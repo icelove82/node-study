@@ -15,7 +15,7 @@ const blog_details = (req, res) => {
   const id = req.params.id;
   Blog.findById(id)
     .then((result) => {
-      res.render('blogs/details', { blog: result, title: 'Blog Details' });
+      res.render('blogs/details', { title: 'Blog Details', blog: result });
     })
     .catch((err) => {
       res.status(404).render('404', { title: 'Blog not found' });
